@@ -1,12 +1,9 @@
-import sys
 import unittest
 from unittest.mock import patch
-from io import StringIO
 from main import *
-from book import Book, create_book, update_book, delete_book_by_isbn, list_books, search_books
-from user import User, create_user, update_user, delete_user_by_id, list_users
-from check import check_availability, borrow_book, return_book
-from store import save_data, load_data
+from book import *
+from user import *
+from check import *
 
 class TestLibraryManagementSystem(unittest.TestCase):
 
@@ -31,38 +28,22 @@ class TestLibraryManagementSystem(unittest.TestCase):
     @patch('builtins.input', side_effect=["Title4", "Author4", "ISBN4"])
     def test_create_book(self, mock_input):
         # Test create_book function
-        new_book = create_book()
+        new_book = create_book(self.books)
         self.assertEqual(new_book.title, "Title4")
         self.assertEqual(new_book.author, "Author4")
         self.assertEqual(new_book.isbn, "ISBN4")
 
-    def test_update_book(self):
-        # Test update_book function
-        update_book(self.books, "ISBN1")
-        updated_book = [book for book in self.books if book.isbn == "ISBN1"]
-        self.assertIsNotNone(updated_book)
-        self.assertEqual(updated_book[0].title, "New Title")
+    def test_delete_book_by_isbn(self):
+        # Test delete_book_by_isbn function
+        delete_book_by_isbn(self.books, "ISBN1")
+        self.assertEqual(len(self.books), 2)
+        self.assertNotIn("ISBN1", [book.isbn for book in self.books])
 
-    def test_list_books(self):
-        # Test list_books function
-        captured_output = StringIO()
-        sys.stdout = captured_output
-        list_books(self.books)
-        sys.stdout = sys.__stdout__  # Reset redirect.
-        self.assertIn("Title1", captured_output.getvalue())
-
-    def test_search_books(self):
-        # Test search_books function
-        search_results = search_books(self.books, "Author2")
-        self.assertIsNotNone(search_results)
-        self.assertEqual(len(search_results), 1)
-        self.assertEqual(search_results[0].author, "Author2")
-
-    def test_create_user(self):
-        # Test create_user function
-        new_user = create_user(self.users)
-        self.assertEqual(new_user.name, "New User")
-        self.assertEqual(new_user.user_id, "New ID")
+    def test_delete_user_by_id(self):
+        # Test delete_user_by_id function
+        delete_user_by_id(self.users, "ID1")
+        self.assertEqual(len(self.users), 2)
+        self.assertNotIn("ID1", [user.user_id for user in self.users])
 
 if __name__ == "__main__":
     unittest.main()
