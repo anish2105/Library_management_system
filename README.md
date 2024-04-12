@@ -1,9 +1,10 @@
-# To run the program
+# Library management system
+<b>To run the program </b>
 ```bash
 python main.py
 ```
 
-# To run the testing file
+<b>To run the testing file </b>
 ```bash
 python -m unittest testi
 ```
